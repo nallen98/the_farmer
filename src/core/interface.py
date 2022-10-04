@@ -275,6 +275,9 @@ def make_bricks(image_type=conf.MULTIBAND_NICKNAME, band=None, brick_id=None, in
         # Detection
         logger.info('Making mosaic for detection...')
         detmosaic = Mosaic(conf.DETECTION_NICKNAME, detection=True)
+        # print(detmosaic.dims)
+        # print('Brick: ', conf.BRICK_WIDTH, conf.BRICK_HEIGHT)
+        # print('Mosaic: ',conf.MOSAIC_WIDTH, conf.MOSAIC_HEIGHT)
 
         if conf.NTHREADS > 1:
             logger.warning('Parallelization of brick making is currently not supported. Continuing anyways...')
@@ -872,7 +875,7 @@ def detect_sources(brick_id, catalog=None, segmap=None, blobmap=None, use_mask=T
     if (~detbrick.is_borrowed):
         detbrick.cleanup()
 
-    if conf.PLOT > 2:
+    if conf.PLOT >= 0:
         plot_blobmap(detbrick, image=detbrick.images[0], band=conf.DETECTION_NICKNAME, mode='log')
         plot_blobmap(detbrick, image=detbrick.images[0], band=conf.DETECTION_NICKNAME, mode='rms')
 
@@ -1397,8 +1400,8 @@ def make_models(brick_id, detbrick='auto', band=None, source_id=None, blob_id=No
         # Else, production mode -- all objects in brick are to be run.
         else:
             if conf.NBLOBS > 0:
-                run_n_blobs = conf.NBLOBS
-                bid_arr = np.arange(1, run_n_blobs+1)
+                bid_arr = np.unique(modbrick.catalog['blob_id'])[:conf.NBLOBS]
+                run_n_blobs = len(bid_arr)
             elif conf.MODEL_PHOT_MAX_NBLOB > 0:
                 bid_arr = np.unique(modbrick.catalog['blob_id'][modbrick.catalog['N_BLOB'] <= conf.MODEL_PHOT_MAX_NBLOB])
                 run_n_blobs = len(bid_arr)
@@ -1406,8 +1409,8 @@ def make_models(brick_id, detbrick='auto', band=None, source_id=None, blob_id=No
                     bid_arr = bid_arr[:conf.NBLOBS]
                     run_n_blobs = len(bid_arr)
             else:
-                run_n_blobs = modbrick.n_blobs
-                bid_arr = np.arange(1, run_n_blobs+1)
+                bid_arr = np.unique(modbrick.catalog['blob_id'])
+                run_n_blobs = len(bid_arr)
             logger.info(f'Preparing to run {run_n_blobs}/{modbrick.n_blobs} blobs.')
             
             outcatalog = modbrick.catalog.copy()
@@ -1434,9 +1437,10 @@ def make_models(brick_id, detbrick='auto', band=None, source_id=None, blob_id=No
             else:
                 logger.info('Serial processing initalized.')
                 output_rows = [runblob(kblob_id+1, kblob, modeling=True, plotting=conf.PLOT) for kblob_id, kblob in enumerate(modblobs)]
-
+                
             
             output_cat = vstack(output_rows)
+            output_cat.write(os.path.join(conf.CATALOG_DIR, f'B{brick_id}_RAWOUTPUT.cat'), format='fits')
 
             ttotal = time.time() - tstart
             logger.info(f'Completed {run_n_blobs} blobs with {len(output_cat)} sources in {ttotal:3.3f}s (avg. {ttotal/len(output_cat):2.2f}s per source)')
@@ -2011,7 +2015,7 @@ def force_models(brick_id, band=None, source_id=None, blob_id=None, insert=True,
                             if np.ndim(output_cat[colname]) > 1:
                                 colshape = np.shape(output_cat[colname][1])
                             else:
-                                colshape = 1
+                                colshape = (1,)
                             mastercat.add_column(Column(length=len(mastercat), dtype=output_cat[colname].dtype, shape=colshape, name=colname))
 
                     for row in output_cat:
@@ -2425,7 +2429,7 @@ def stage_brickfiles(brick_id, nickname='MISCBRICK', band=None, modeling=False, 
 
     if os.path.exists(path_brickfile):
         # Stage things
-        images = np.zeros((len(sbands), conf.BRICK_WIDTH + 2 * conf.BRICK_BUFFER, conf.BRICK_HEIGHT + 2 * conf.BRICK_BUFFER))
+        images = np.zeros((len(sbands), conf.BRICK_HEIGHT + 2 * conf.BRICK_BUFFER, conf.BRICK_WIDTH + 2 * conf.BRICK_BUFFER))
         weights = np.zeros_like(images)
         masks = np.zeros_like(images, dtype=bool)
 

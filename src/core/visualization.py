@@ -255,13 +255,14 @@ def plot_srcprofile(blob, src, sid, bands=None):
             xp0, yp0 = bsrc['x_orig'][0] - blob.subvector[1] - blob.mosaic_origin[1] + conf.BRICK_BUFFER, bsrc['y_orig'][0] - blob.subvector[0] - blob.mosaic_origin[0] + conf.BRICK_BUFFER
         xp, yp = src.pos[0], src.pos[1]
 
-        xps, yps = xp, yp
+        xps, yps = yp, xp
         flux, flux_err = bsrc[f'FLUX_{band}'][0], bsrc[f'FLUXERR_{band}'][0]
+        # print(flux, flux_err)
         mag, mag_err = bsrc[f'MAG_{band}'][0], bsrc[f'MAGERR_{band}'][0]
         n_blob = bsrc['N_BLOB'][0]
         chi2 = bsrc[f'CHISQ_{band}'][0]
         snr = bsrc[f'SNR_{band}'][0]
-
+        # print(chi2,snr)
         is_resolved = False
         if src.name not in ('PointSource', 'SimpleGalaxy'):
             is_resolved = True
@@ -292,6 +293,8 @@ def plot_srcprofile(blob, src, sid, bands=None):
         rms = np.median(blob.background_rms_images[idx])
 
         xpix, ypix = np.nonzero(seg)
+        # print(np.nonzero(seg))
+        # print(len(xpix), len(ypix))
         dx, dy = (np.max(xpix) - np.min(xpix)) / 2., (np.max(ypix) - np.min(ypix)) / 2.
         buff = np.min([conf.BLOB_BUFFER, 10.])
         xlim, ylim = np.array([-(dx + buff), (dx + buff)]) * conf.PIXEL_SCALE, np.array([-(dy + buff), (dy + buff)]) * conf.PIXEL_SCALE
@@ -1117,7 +1120,7 @@ def plot_blobmap(brick, image=None, band=None, catalog=None, mode='rms'):
     mycmap.set_under('k', alpha=0)
     ax.imshow(imgs_marked, alpha=0.9, cmap=mycmap, vmin=0, zorder=2, origin='lower')
     ax.scatter(catalog['x'], catalog['y'], marker='+', color='limegreen', s=0.1)
-    ax.add_patch(Rectangle((conf.BRICK_BUFFER, conf.BRICK_BUFFER), conf.BRICK_HEIGHT, conf.BRICK_WIDTH, fill=False, alpha=0.3, edgecolor='purple', linewidth=1))
+    ax.add_patch(Rectangle((conf.BRICK_BUFFER, conf.BRICK_BUFFER), conf.BRICK_WIDTH, conf.BRICK_HEIGHT, fill=False, alpha=0.3, edgecolor='purple', linewidth=1))
 
     for i in np.arange(brick.n_blobs):
         idx, idy = np.nonzero(brick.blobmap == i+1)
@@ -1144,7 +1147,7 @@ def plot_blobmap(brick, image=None, band=None, catalog=None, mode='rms'):
 def plot_ldac(tab_ldac, band, xlims=None, ylims=None, box=False, sel=None):
     fig, ax = plt.subplots()
     xbin = np.arange(0, 15, 0.1)
-    ybin = np.arange(12, 26, 0.1)
+    ybin = np.arange(12, 35, 0.1)
     ax.hist2d(tab_ldac['FLUX_RADIUS'], tab_ldac['MAG_AUTO'], bins=(xbin, ybin), cmap='Greys', norm=LogNorm())
     if box:
         rect = Rectangle((xlims[0], ylims[0]), xlims[1] - xlims[0], ylims[1] - ylims[0], fill=False, alpha=0.3,
@@ -1155,7 +1158,7 @@ def plot_ldac(tab_ldac, band, xlims=None, ylims=None, box=False, sel=None):
 
     fig.subplots_adjust(bottom = 0.15)
     ax.set(xlabel='Flux Radius (px)', xlim=(0, 15),
-            ylabel='Mag Auto (AB)', ylim=(26, 12))
+            ylabel='Mag Auto (AB)', ylim=(35, 12))
     ax.grid()
 
     if sel is not None:

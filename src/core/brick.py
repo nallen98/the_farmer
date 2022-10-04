@@ -202,7 +202,7 @@ class Brick(Subimage):
     def clean_segmap(self):
         """TODO: docstring"""
         self.logger.info('Removing sources in the border region')
-        coords = np.array([self.catalog['x'], self.catalog['y']]).T
+        coords = np.array([self.catalog['y'], self.catalog['x']]).T
         self._allowed_sources = (coords[:,0] > self._buff_left) & (coords[:,0] < self._buff_right )\
                         & (coords[:,1] > self._buff_bottom) & (coords[:,1] < self._buff_top)
         

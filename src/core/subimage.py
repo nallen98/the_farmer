@@ -226,7 +226,7 @@ class Subimage():
     def _get_subimage(self, x0, y0, w, h, buffer):
         # Make a cut-out
         # Handle buffer zones
-        subdims = (w + 2*buffer, h + 2*buffer)
+        subdims = (h + 2*buffer, w + 2*buffer)
         left = x0 - buffer
         right = x0 + subdims[0] - buffer
         bottom = y0 - buffer

@@ -90,8 +90,8 @@ class Blob(Subimage):
         idx, idy = blobmask.nonzero()
         xlo, xhi = np.min(idx), np.max(idx) + 1
         ylo, yhi = np.min(idy), np.max(idy) + 1
-        w = xhi - xlo
-        h = yhi - ylo
+        h = xhi - xlo
+        w = yhi - ylo
 
         
         self._is_itemblob = False
@@ -1415,6 +1415,7 @@ class Blob(Subimage):
         chisq_exp = 0.0
 
         # holders - or else it's pure insanity.
+        # chisq[:, 1, 1]=chisq[:, 1, 1]+0.5
         sid = self.bcatalog['source_id'][~self._solved]
         chisq = self.rchisq[~self._solved]
         solution_catalog = self.solution_catalog[~self._solved]
@@ -1457,10 +1458,10 @@ class Blob(Subimage):
             nextmask |= badmask
 
             # For which was SG best? Then go back!
-            premask_sg = ~expmask & ~devmask & (chisq[:, 0, 1] + conf.PS_SG_THRESH < chisq[:, 0, 0])
+            premask_sg = ~expmask & ~devmask & (chisq[:, 0, 1] + conf.PS_SG_THRESH1 < chisq[:, 0, 0])
 
             # For which was PS best? The go back!
-            premask_ps = (chisq[:, 0, 0] < chisq[:, 0, 1] + conf.PS_SG_THRESH) & (chisq[:, 0, 0] < chisq[:, 1, 0]) & (chisq[:, 0, 0] < chisq[:, 1, 1])
+            premask_ps = (chisq[:, 0, 0] < chisq[:, 0, 1] + conf.PS_SG_THRESH1) & (chisq[:, 0, 0] < chisq[:, 1, 0]) & (chisq[:, 0, 0] < chisq[:, 1, 1])
 
             # If Exp beats Dev by a lot
             nexpmask = expmask & ~movemask & (abs(chisq_exp - chisq[:, 1, 0])  <  abs(chisq_exp - chisq[:, 1, 1])) & ~badmask
@@ -2234,6 +2235,7 @@ class Blob(Subimage):
 
 
             pos = 0000
+            # print(type(row))
             mag, magerr = self.bcatalog[row]['MAG_'+band], self.bcatalog[row]['MAGERR_'+band]
             flux, fluxerr = self.bcatalog[row]['FLUX_'+band], self.bcatalog[row]['FLUXERR_'+band]
             rawflux, rawfluxerr = self.bcatalog[row]['RAWFLUX_'+band], self.bcatalog[row]['RAWFLUXERR_'+band]
