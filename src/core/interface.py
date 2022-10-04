@@ -1440,7 +1440,7 @@ def make_models(brick_id, detbrick='auto', band=None, source_id=None, blob_id=No
                 
             
             output_cat = vstack(output_rows)
-            output_cat.write(os.path.join(conf.CATALOG_DIR, f'B{brick_id}_RAWOUTPUT.cat'), format='fits')
+            output_cat.write(os.path.join(conf.CATALOG_DIR, f'B{brick_id}_RAWOUTPUT.cat'), format='fits', overwrite=conf.OVERWRITE)
 
             ttotal = time.time() - tstart
             logger.info(f'Completed {run_n_blobs} blobs with {len(output_cat)} sources in {ttotal:3.3f}s (avg. {ttotal/len(output_cat):2.2f}s per source)')
