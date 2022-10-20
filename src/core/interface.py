@@ -33,7 +33,7 @@ import pickle
 from tractor import NCircularGaussianPSF, PixelizedPSF, Image, Tractor, FluxesPhotoCal, NullWCS, ConstantSky, EllipseESoft, Fluxes, PixPos
 from tractor.galaxy import ExpGalaxy, DevGalaxy, FixedCompositeGalaxy, SoftenedFracDev, GalaxyShape
 from tractor.sersic import SersicIndex, SersicGalaxy
-from tractor.sercore import SersicCoreGalaxy
+# from tractor.sercore import SersicCoreGalaxy
 from tractor.pointsource import PointSource
 from tractor.psfex import PixelizedPsfEx, PsfExModel
 from tractor.psf import HybridPixelizedPSF
