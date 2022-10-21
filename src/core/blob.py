@@ -33,7 +33,7 @@ from scipy.ndimage import binary_dilation
 
 from tractor import NCircularGaussianPSF, PixelizedPSF, PixelizedPsfEx, Image, Tractor, FluxesPhotoCal, NullWCS, ConstantSky, EllipseE, EllipseESoft, Fluxes, PixPos, Catalog
 from tractor.sersic import SersicIndex, SersicGalaxy
-from tractor.sercore import SersicCoreGalaxy
+# from tractor.sercore import SersicCoreGalaxy
 from tractor.galaxy import ExpGalaxy, DevGalaxy, FixedCompositeGalaxy, SoftenedFracDev
 from tractor.pointsource import PointSource
 from tractor.psf import HybridPixelizedPSF
@@ -1438,6 +1438,7 @@ class Blob(Subimage):
             mids[~chmask] = 3
 
         if self._level == 1:
+            chisq[:, 1, 1]=chisq[:, 1, 1]+0.5
             for i, blob_id in enumerate(sid):
                 self.logger.debug(f'Source #{blob_id} Chi2 -- EXP({chisq[i, 1, 0]:3.3f}) vs. DEV({chisq[i, 1, 1]:3.3f}) with thresh of {conf.EXP_DEV_THRESH:3.3f}')
             # For which are they nearly equally good?
