@@ -255,7 +255,7 @@ def plot_srcprofile(blob, src, sid, bands=None):
             xp0, yp0 = bsrc['x_orig'][0] - blob.subvector[1] - blob.mosaic_origin[1] + conf.BRICK_BUFFER, bsrc['y_orig'][0] - blob.subvector[0] - blob.mosaic_origin[0] + conf.BRICK_BUFFER
         xp, yp = src.pos[0], src.pos[1]
 
-        xps, yps = xp, yp
+        xps, yps = yp, xp
         flux, flux_err = bsrc[f'FLUX_{band}'][0], bsrc[f'FLUXERR_{band}'][0]
         # print(flux, flux_err)
         mag, mag_err = bsrc[f'MAG_{band}'][0], bsrc[f'MAGERR_{band}'][0]
