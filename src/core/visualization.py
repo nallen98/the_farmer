@@ -375,7 +375,7 @@ def plot_srcprofile(blob, src, sid, bands=None):
         
 
         # row 2 -- image, weights, mask, segment
-        ax[1,0].imshow(img, vmin=-3*rms, vmax=3*rms, cmap='RdGy', extent=extent)
+        ax[1,0].imshow(img, vmin=-3*rms, vmax=3*rms, cmap='RdGy', extent=extent, origin = 'lower')
         ax[1,0].text(0.05, 1.03, 'Image', transform=ax[1,0].transAxes)
         ax[1,0].set(xlim=xlim, ylim=ylim)
         ax[1,0].contour(img, levels=np.arange(2*rms, np.min([5*rms, np.max(img)]), rms), colors='royalblue', extent=extent, alpha=0.5)
