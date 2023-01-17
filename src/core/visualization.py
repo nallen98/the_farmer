@@ -1112,7 +1112,7 @@ def plot_blobmap(brick, image=None, band=None, catalog=None, mode='rms'):
     backlevel, noisesigma = brick.backgrounds[0]
     if mode == 'log':
         vmin, vmax = np.nanmax([backlevel + noisesigma, 1E-5]), np.nanmax(brick.images[0])
-        norm = LogNorm(np.max([backlevel + noisesigma, 1E-5]), 0.9*np.max(image), clip='True')
+        norm = LogNorm(np.nanmax([backlevel + noisesigma, 1E-5]), 0.9*np.nanmax(image), clip='True')
         ax.imshow(image, cmap='Greys', origin='lower', norm=norm)
     elif mode == 'rms':
         ax.imshow(image - backlevel, cmap='RdGy', origin='lower', vmin=-3*noisesigma, vmax=3*noisesigma)
