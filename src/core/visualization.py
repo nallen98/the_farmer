@@ -50,7 +50,7 @@ def plot_background(brick, idx, band=''):
     out_path = os.path.join(conf.PLOT_DIR, f'B{brick.brick_id}_{band}_background.pdf')
     ax.axis('off')
     ax.margins(0,0)
-    fig.savefig(out_path, dpi = 300, overwrite=True, pad_inches=0.0)
+    fig.savefig(out_path, dpi = 300, pad_inches=0.0)
     plt.close()
     logger.info(f'Saving figure: {out_path}')
 
@@ -61,7 +61,7 @@ def plot_mask(brick, idx, band=''):
     out_path = os.path.join(conf.PLOT_DIR, f'B{brick.brick_id}_{band}_mask.pdf')
     ax.axis('off')
     ax.margins(0,0)
-    fig.savefig(out_path, dpi = 300, overwrite=True, pad_inches=0.0)
+    fig.savefig(out_path, dpi = 300, pad_inches=0.0)
     plt.close()
     logger.info(f'Saving figure: {out_path}')
 
@@ -80,7 +80,7 @@ def plot_brick(brick, idx, band=''):
     out_path = os.path.join(conf.PLOT_DIR, f'B{brick.brick_id}_{band}_brick.pdf')
     ax.axis('off')
     ax.margins(0,0)
-    fig.savefig(out_path, dpi = 300, overwrite=True, pad_inches=0.0)
+    fig.savefig(out_path, dpi = 300, pad_inches=0.0)
     plt.close()
     logger.info(f'Saving figure: {out_path}')
 
@@ -1164,7 +1164,7 @@ def plot_ldac(tab_ldac, band, xlims=None, ylims=None, box=False, sel=None):
     if sel is not None:
         nsel = np.sum(sel)
         ax.text(x=0.05, y=0.95, s=f'N = {nsel}', transform=ax.transAxes)
-    fig.savefig(os.path.join(conf.PLOT_DIR, f'{band}_box_{box}_ldac.pdf'), overwrite=True)
+    fig.savefig(os.path.join(conf.PLOT_DIR, f'{band}_box_{box}_ldac.pdf'))
 
     plt.close()
 
